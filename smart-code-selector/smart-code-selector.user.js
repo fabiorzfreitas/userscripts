@@ -6,8 +6,8 @@
 // @author       fabiorzfreitas
 // @match        *://*/*
 // @grant        none
-// @downloadURL  https://raw.githubusercontent.com/fabiorzfreitas/userscripts/main/Smart%20Code%20Selector/smart-code-selector.user.js
-// @updateURL    https://raw.githubusercontent.com/fabiorzfreitas/userscripts/main/Smart%20Code%20Selector/smart-code-selector.user.js
+// @downloadURL  https://raw.githubusercontent.com/fabiorzfreitas/userscripts/main/smart-code-selector/smart-code-selector.user.js
+// @updateURL    https://raw.githubusercontent.com/fabiorzfreitas/userscripts/main/smart-code-selector/smart-code-selector.user.js
 // ==/UserScript==
 
 (function() {
