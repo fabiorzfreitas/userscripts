@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Disney+ Subtitle Downloader (Fork)
 // @namespace   https://github.com/fabiorzfreitas/userscripts/disney-plus-subtitle-downloader
-// @version     3.8.1
+// @version     3.8.2
 // @description Disney+ (disneyplus.com) subtitle downloader. Download single episodes, all languages, or entire seasons as ZIP files. VTT→SRT conversion, forced subtitle support. Fork: UI translated to English.
 // @author      fabiorzfreitas (Forked from victories)
 // @license     MIT
@@ -34,7 +34,7 @@
   };
 
   const LANG_NAMES = {
-    'en': 'English', 'pt-BR': 'Português (Brasil)', 'ar': 'العربية', 'de': 'Deutsch',
+    'pt-BR': 'Português (Brasil)', 'en': 'English', 'ar': 'العربية', 'de': 'Deutsch',
     'fr': 'Français', 'es': 'Español', 'it': 'Italiano', 'pt': 'Português',
     'ru': 'Русский', 'ja': '日本語', 'ko': '한국어', 'zh': '中文',
     'nl': 'Nederlands', 'pl': 'Polski', 'sv': 'Svenska', 'da': 'Dansk',
@@ -49,7 +49,7 @@
   };
 
   const LANG_SAFE = {
-    'en': 'English', 'pt-BR': 'Portuguese-BR', 'ar': 'Arabic', 'de': 'Deutsch',
+    'pt-BR': 'Portuguese-BR', 'en': 'English', 'ar': 'Arabic', 'de': 'Deutsch',
     'fr': 'Francais', 'es': 'Espanol', 'it': 'Italiano', 'pt': 'Portugues',
     'ru': 'Russian', 'ja': 'Japanese', 'ko': 'Korean', 'zh': 'Chinese',
     'nl': 'Nederlands', 'pl': 'Polski', 'sv': 'Svenska', 'da': 'Dansk',
@@ -2082,13 +2082,13 @@
       langSelect.className = 'sd-lang-select';
       const availLangs = [...new Set(normalTracks.map(t => t.LANGUAGE))];
       if (availLangs.length === 0) {
-        availLangs.push('en', 'pt-BR');
+        availLangs.push('pt-BR', 'en');
       }
       for (const code of availLangs) {
         const opt = document.createElement('option');
         opt.value = code;
         opt.textContent = getLangName(code);
-        if (code === AppState.selectedLang || (!AppState.selectedLang && code === 'en')) opt.selected = true;
+        if (code === AppState.selectedLang || (!AppState.selectedLang && code === 'pt-BR')) opt.selected = true;
         langSelect.appendChild(opt);
       }
       langSelect.addEventListener('change', () => { AppState.selectedLang = langSelect.value; });
