@@ -34,30 +34,30 @@
   };
 
   const LANG_NAMES = {
-    'tr': 'Türkçe', 'en': 'English', 'ar': 'العربية', 'de': 'Deutsch',
+    'en': 'English', 'pt-BR': 'Português (Brasil)', 'ar': 'العربية', 'de': 'Deutsch',
     'fr': 'Français', 'es': 'Español', 'it': 'Italiano', 'pt': 'Português',
     'ru': 'Русский', 'ja': '日本語', 'ko': '한국어', 'zh': '中文',
     'nl': 'Nederlands', 'pl': 'Polski', 'sv': 'Svenska', 'da': 'Dansk',
     'no': 'Norsk', 'fi': 'Suomi', 'el': 'Ελληνικά', 'he': 'עברית',
     'hi': 'हिन्दी', 'th': 'ไทย', 'ro': 'Română', 'hu': 'Magyar',
     'cs': 'Čeština', 'bg': 'Български', 'hr': 'Hrvatski', 'sr': 'Srpski',
-    'uk': 'Українська', 'fa': 'فارسی',
-    'pt-BR': 'Português (Brasil)', 'zh-Hant': '中文 (繁體)', 'zh-Hans': '中文 (简体)',
+    'tr': 'Türkçe', 'uk': 'Українська', 'fa': 'فارسی',
+    'zh-Hant': '中文 (繁體)', 'zh-Hans': '中文 (简体)',
     'es-419': 'Español (Lat.)', 'es-ES': 'Español (España)',
     'fr-CA': 'Français (Canada)', 'pt-PT': 'Português (Portugal)',
     'en-US': 'English (US)', 'en-GB': 'English (UK)',
   };
 
   const LANG_SAFE = {
-    'tr': 'Turkce', 'en': 'English', 'ar': 'Arabic', 'de': 'Deutsch',
+    'en': 'English', 'pt-BR': 'Portuguese-BR', 'ar': 'Arabic', 'de': 'Deutsch',
     'fr': 'Francais', 'es': 'Espanol', 'it': 'Italiano', 'pt': 'Portugues',
     'ru': 'Russian', 'ja': 'Japanese', 'ko': 'Korean', 'zh': 'Chinese',
     'nl': 'Nederlands', 'pl': 'Polski', 'sv': 'Svenska', 'da': 'Dansk',
     'no': 'Norsk', 'fi': 'Suomi', 'el': 'Greek', 'he': 'Hebrew',
     'hi': 'Hindi', 'th': 'Thai', 'ro': 'Romana', 'hu': 'Magyar',
     'cs': 'Cestina', 'bg': 'Bulgarian', 'hr': 'Hrvatski', 'sr': 'Srpski',
-    'uk': 'Ukrainian', 'fa': 'Farsi',
-    'pt-BR': 'Portuguese-BR', 'zh-Hant': 'Chinese-Trad', 'zh-Hans': 'Chinese-Simp',
+    'tr': 'Turkce', 'uk': 'Ukrainian', 'fa': 'Farsi',
+    'zh-Hant': 'Chinese-Trad', 'zh-Hans': 'Chinese-Simp',
     'es-419': 'Spanish-Lat', 'es-ES': 'Spanish-ES',
     'fr-CA': 'French-CA', 'pt-PT': 'Portuguese-PT',
     'en-US': 'English-US', 'en-GB': 'English-UK',
@@ -2101,7 +2101,7 @@
       const tokenInfo = document.createElement('div');
       tokenInfo.className = 'sd-token-info';
       tokenInfo.textContent = tokenOk
-        ? `Token active (${Math.round((TIMING.TOKEN_MAX_AGE - tokenAge) / 60000)} min left)`
+        ? `Token active (${Math.round((TIMING.TOKEN_MAX_AGE - tokenAge) / 60000)}min left)`
         : 'No token — please play an episode';
       tokenInfo.style.color = tokenOk ? '#4caf50' : '#ff9800';
       seasonSection.appendChild(tokenInfo);
