@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Smart Code Selector
-// @namespace    https://github.com/fabiorzfreitas/userscripts
+// @namespace    https://github.com/fabiorzfreitas/userscripts/smart-code-selector
 // @version      1.1
 // @description  Quad-click (4x) selects the entire code block; 2x clicks still select a word.
 // @author       fabiorzfreitas
