@@ -1,36 +1,43 @@
-# Userscripts
+# UserScripts by fabiorzfreitas
 
-A collection of custom UserScripts to enhance web browsing functionality, specifically tailored for Floorp/Firefox users.
+A collection of personal Userscripts to enhance browsing efficiency, automate data extraction, and fix UI annoyances.
 
-## 🚀 Scripts
+## 📜 Available Scripts
 
-### 1. Smart Code Selector
-This script improves the "double-click" behavior on technical sites. It allows for precise word selection while providing a quick mouse-only gesture to grab entire code snippets without catching surrounding punctuation or line breaks.
+### 1. Battle Cats Wiki Copy (Universal)
+**Description:** Extracts unit names (Ubers, Legends, Super Rares, and Rares) from Gacha Event banner pages on both Fandom and Miraheze wikis. It formats the data into a JSON string and copies it to your clipboard.
+*   **Key Feature:** Supports the newer Miraheze layout and filters out hidden accessibility text in page titles.
+*   **How to use:** Click the page header (H1) on any Battle Cats Wiki banner page.
+*   **Install:** [Click here to install](https://raw.githubusercontent.com/fabiorzfreitas/userscripts/main/battle-cats-wiki-copy/battle-cats-wiki-copy.user.js)
 
-* **2 Clicks:** Selects a single word (default browser behavior).
-* **3 Clicks:** Selects the entire line (default browser behavior).
-* **4 Clicks:** Selects the **exact content** of the `<code>`, `<pre>`, `<kbd>`, or `<samp>` block.
+---
 
-**[➔ Install Smart Code Selector](https://raw.githubusercontent.com/fabiorzfreitas/userscripts/main/smart-code-selector/smart-code-selector.user.js)**
+### 2. Disney Plus Subtitle Downloader (pt-BR Fork)
+**Description:** A specialized fork of the popular Disney+ subtitle downloader.
+*   **Modifications:** Hardcoded to set **pt-BR** (Portuguese - Brazil) as the default language for subtitle fetching, removing the need for manual selection in the UI.
+*   **Source:** Based on [victories](https://github.com/victories)' original [script](https://github.com/victories/disney-subtitle-downloader).
+*   **Install:** [Click here to install](https://raw.githubusercontent.com/fabiorzfreitas/userscripts/main/disney-plus-subtitle-downloader/disney-plus-subtitle-downloader.user.js)
+
+---
+
+### 3. Smart Code Selector
+**Description:** Specifically optimized for Firefox and Floorp users to solve "clunky selection" issues in code blocks. It enables precise selection of code snippets without grabbing line numbers or trailing whitespace.
+*   **Key Feature:** Implements a quadruple-click gesture to instantly select the entire relevant code block.
+*   **Install:** [Click here to install](https://raw.githubusercontent.com/fabiorzfreitas/userscripts/main/smart-code-selector/smart-code-selector.user.js)
+
+---
+
+### 4. MyGamatoto Layout Flattener
+**Description:** Simplifies the MyGamatoto website layout by flattening nested scrollbars and expanding the container width. 
+*   **Key Feature:** Removes "nested scroll" frustration by forcing the container to adapt to the page height, making data comparison much easier.
+*   **Install:** [Click here to install](https://raw.githubusercontent.com/fabiorzfreitas/userscripts/main/mygamatoto-flattener/mygamatoto-flattener.user.js)
 
 ---
 
 ## 🛠 Installation
 
-1. Install a userscript manager extension:
-   - [Tampermonkey](https://www.tampermonkey.net/) (Recommended)
-   - [Violentmonkey](https://violentmonkey.github.io/)
-2. Click the "Install" link in the section above.
-3. Confirm the installation in the extension popup.
-
-## 🔧 Technical Notes (Firefox/Floorp)
-
-To ensure custom styling and scripts work optimally for code selection, it is recommended to toggle the following in `about:config`:
-
-| Preference | Value | Description |
-| :--- | :--- | :--- |
-| `layout.word_select.stop_at_punctuation` | `true` | Stops double-click selection at symbols/delimiters. |
-| `layout.word_select.eat_space_to_next_word` | `false` | Prevents the selection from grabbing the trailing space. |
-
-## 📜 License
-MIT
+1. Install a userscript manager extension in your browser:
+    *   [Tampermonkey](https://www.tampermonkey.net/) (Recommended)
+    *   [Violentmonkey](https://violentmonkey.github.io/)
+2. Click the "Install" link for the script you want above.
+3. Confirm the installation in your script manager dashboard.
