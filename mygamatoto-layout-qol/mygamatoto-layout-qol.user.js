@@ -9,7 +9,6 @@
 // @run-at       document-idle
 // @downloadURL  https://raw.githubusercontent.com/fabiorzfreitas/userscripts/main/mygamatoto-layout-qol/mygamatoto-layout-qol.user.js
 // @updateURL    https://raw.githubusercontent.com/fabiorzfreitas/userscripts/main/mygamatoto-layout-qol/mygamatoto-layout-qol.user.js
-
 // ==/UserScript==
 
 (function() {
