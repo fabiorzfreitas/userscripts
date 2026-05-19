@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MyGamatoto Layout QoL
 // @namespace    https://github.com/fabiorzfreitas/userscripts
-// @version      3.0
+// @version      3.1
 // @description  Flatten the nested scrollbars, and changes level input into a number type.
 // @author       fabiorzfreitas
 // @match        https://mygamatoto.com/comparecats/*
@@ -73,8 +73,19 @@
 
     // 1. Function to transform the site's input whenever it appears
     function handleSiteInput(input) {
-        if (input.type === 'number') return;
-
+        // Find the parent table cell (td)
+        const parentCell = input.closest('td');
+        
+        // Target logic: 
+        // 1. Must be inside a TD
+        // 2. That TD must be the 5th child (Level column)
+        // 3. That TD must be inside the table body (tbody)
+        if (!parentCell || 
+            parentCell.cellIndex !== 4 || // cellIndex is 0-based, so 4 is the 5th column
+            !parentCell.closest('.ant-table-tbody')) {
+            return;
+        }
+        
         // Change type to number to get the arrows
         input.type = 'number';
         input.min = "1";
@@ -92,14 +103,14 @@
     }
 
     // 2. Observe the document for when the site spawns its edit-mode input
+    // If the node itself is an input
+    // Or if the input is inside the added node
     const observer = new MutationObserver((mutations) => {
         mutations.forEach(mutation => {
             mutation.addedNodes.forEach(node => {
-                // If the node itself is an input
                 if (node.tagName === 'INPUT') {
                     handleSiteInput(node);
                 } 
-                // Or if the input is inside the added node
                 else if (node.querySelectorAll) {
                     const inputs = node.querySelectorAll('input');
                     inputs.forEach(handleSiteInput);
