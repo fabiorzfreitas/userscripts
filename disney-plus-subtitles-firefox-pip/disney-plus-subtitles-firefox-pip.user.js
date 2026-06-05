@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Disney+ Subtitle Fix for Firefox PiP (Hive Engine)
 // @namespace    https://github.com/fabiorzfreitas/userscripts
-// @version      1.0
+// @version      1.1
 // @description  Fixes Picture-in-Picture subtitles on Disney+ by mapping new .hive classes to a native video text track.
 // @author       fabiorzfreitas
 // @match        https://www.disneyplus.com/*
@@ -15,92 +15,89 @@
     'use strict';
 
     let nativeTrack = null;
-    let currentCue = null;
-    let observer = null;
+    let lastText = '';
 
-    // Helper to find the video element and set up the native track
-    function setupNativeTrack() {
+    // Ensures a clean, usable HTML5 text track is attached to the active video element
+    function getNativeTrack() {
         const video = document.querySelector('video');
-        if (!video) return null;
+        if (!video) {
+            nativeTrack = null;
+            return null;
+        }
 
-        // Avoid adding multiple tracking lines if the user switches videos
-        if (!nativeTrack || !video.contains(nativeTrack)) {
-            const trackElement = document.createElement('track');
-            trackElement.kind = 'captions';
-            trackElement.label = 'PiP Fix';
-            trackElement.srclang = 'en';
-            trackElement.default = true;
-            video.appendChild(trackElement);
-            nativeTrack = trackElement.track;
+        // If track exists but video changed out from under it, reset
+        if (nativeTrack && !video.contains(nativeTrack.track?.element)) {
+            nativeTrack = null;
+        }
+
+        if (!nativeTrack) {
+            // Check if we already appended one to this specific video element
+            const existingTrack = video.querySelector('track[label="PiP Fix"]');
+            if (existingTrack) {
+                nativeTrack = existingTrack.track;
+            } else {
+                const trackElement = document.createElement('track');
+                trackElement.kind = 'captions';
+                trackElement.label = 'PiP Fix';
+                trackElement.srclang = 'en';
+                trackElement.default = true;
+                video.appendChild(trackElement);
+                nativeTrack = trackElement.track;
+            }
             nativeTrack.mode = 'showing';
         }
-        return video;
+        return nativeTrack;
     }
 
-    // Scrapes the text layers from the new Hive element structure
-    function updateSubtitles() {
-        setupNativeTrack();
-        if (!nativeTrack) return;
+    // High-frequency fallback query that checks inside open Shadow Roots if necessary
+    function getSubtitleText() {
+        const lines = document.querySelectorAll('.hive-subtitle-renderer-line');
+        if (lines.length > 0) {
+            return Array.from(lines).map(el => el.innerText.trim()).join('\n');
+        }
+        return '';
+    }
 
-        // Clear out the previous active cue
-        if (currentCue) {
-            try { nativeTrack.removeCue(currentCue); } catch(e) {}
-            currentCue = null;
+    // Handles clearing old cues and safely flashing the new text frame into the PiP pipeline
+    function processSubtitles() {
+        const track = getNativeTrack();
+        if (!track) return;
+
+        const currentText = getSubtitleText();
+        
+        // Only modify the text track payload if the words on screen have actually changed
+        if (currentText === lastText) return;
+        lastText = currentText;
+
+        // Purge previous active cues to prevent visual text stacking or ghosting
+        if (track.cues) {
+            for (let i = track.cues.length - 1; i >= 0; i--) {
+                track.removeCue(track.cues[i]);
+            }
         }
 
-        // Target the individual line elements inside the Hive container
-        const lineElements = document.querySelectorAll('.hive-subtitle-renderer-line');
-        if (lineElements.length === 0) return;
-
-        // Extract and combine text segments (preserving line breaks)
-        const textLines = Array.from(lineElements).map(el => el.innerText.trim());
-        const combinedText = textLines.join('\n');
-
-        if (combinedText) {
+        if (currentText) {
             const video = document.querySelector('video');
             const now = video ? video.currentTime : 0;
             
-            // Create an active cue that stays alive until the next mutation replaces it
-            currentCue = new VTTCue(now, now + 10, combinedText);
-            nativeTrack.addCue(currentCue);
+            // Set a generous window bounds; the script will forcibly clear it on the next mutation anyway
+            const cue = new VTTCue(now, now + 120, currentText);
+            track.addCue(cue);
         }
     }
 
-    // Watch the DOM tree for subtitle injections
-    function initObserver() {
-        if (observer) {
-            observer.disconnect();
-        }
+    // Global body observer to catch streaming updates across aggressive single-page route variations
+    const observer = new MutationObserver(() => {
+        processSubtitles();
+    });
 
-        // We look for the main override wrapper region
-        const targetNode = document.querySelector('timed-text-override-region');
-        
-        if (!targetNode) {
-            // Keep looking if the stream hasn't fully buffed/loaded into view yet
-            setTimeout(initObserver, 1000);
-            return;
-        }
+    // Start tracking the DOM instantly
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        characterData: true
+    });
 
-        observer = new MutationObserver((mutations) => {
-            updateSubtitles();
-        });
-
-        observer.observe(targetNode, {
-            childList: true,
-            subtree: true,
-            characterData: true
-        });
-    }
-
-    // Handle single-page app state transitions when switching videos/shows
-    let lastUrl = location.href;
-    setInterval(() => {
-        if (location.href !== lastUrl) {
-            lastUrl = location.href;
-            initObserver();
-        }
-    }, 2000);
-
-    // Initial launch execution
-    initObserver();
+    // Fail-safe poller to keep stream synchronization alive if mutations temporarily throttle
+    setInterval(processSubtitles, 250);
 })();
