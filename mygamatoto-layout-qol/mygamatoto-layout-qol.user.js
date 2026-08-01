@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         MyGamatoto Layout QoL
 // @namespace    https://github.com/fabiorzfreitas/userscripts
-// @version      3.2
-// @description  Flatten the nested scrollbars, change level input into a number type, and default page size to 1500.
+// @version      3.2.1
+// @description  Flatten layout, change level input into number type, and default page size to 1500 without scroll jump.
 // @author       fabiorzfreitas
 // @match        https://mygamatoto.com/comparecats/*
 // @grant        GM_addStyle
@@ -25,7 +25,6 @@
         }
 
         /* 2. Target the 'flexible-width-max' section specifically */
-        /* We want this to be sequential, not a separate floating container */
         .flexible-width-max {
             width: 100% !important;
             max-width: 100% !important;
@@ -42,7 +41,7 @@
             height: auto !important;
         }
 
-        /* Optimized Section 4 */
+        /* 4. Flatten scrollable areas */
         .ant-table-body,
         .ant-table-body-outer,
         .ant-table-body-inner,
@@ -54,7 +53,7 @@
             height: auto !important;
         }
 
-        /* 5. Keep horizontal scrolling for the table itself so it doesn't squish */
+        /* 5. Keep horizontal scrolling for the table itself */
         .ant-table-content {
             overflow-x: auto !important;
         }
@@ -64,7 +63,7 @@
             display: none !important;
         }
 
-        /* 7. Re-center the footer/logo area if it got weirdly aligned */
+        /* 7. Re-center footer/logo area */
         .logo, .ant-row {
             width: 100% !important;
         }
@@ -92,19 +91,20 @@
     input.min = "1";
     input.max = "130";
     input.style.textAlign = "center";
-
-    // Ant Design inputs sometimes have hardcoded widths that look bad as numbers
     input.style.width = "100%";
 
     // Trigger the site's update logic when the arrows are clicked
     input.addEventListener("change", () => {
-      // Dispatch 'input' so React picks up the change
       input.dispatchEvent(new Event("input", { bubbles: true }));
     });
   }
 
-  // 2. Function to automatically switch pagination to 1500 / page
+  // 2. Function to switch pagination to 1500 / page while preserving scroll position
+  let isChangingPageSize = false;
+
   function setDefaultPageSize() {
+    if (isChangingPageSize) return;
+
     const sizeChanger = document.querySelector(
       ".ant-pagination-options-size-changer",
     );
@@ -112,6 +112,11 @@
 
     const currentText = sizeChanger.innerText || "";
     if (currentText.includes("1500")) return;
+
+    isChangingPageSize = true;
+
+    // Save scroll position before layout shift
+    const savedScrollY = window.scrollY;
 
     sizeChanger.click();
 
@@ -122,6 +127,15 @@
       for (const option of options) {
         if (option.innerText.includes("1500")) {
           option.click();
+
+          // Restore exact scroll position after re-render completes
+          requestAnimationFrame(() => {
+            window.scrollTo(0, savedScrollY);
+            setTimeout(() => {
+              window.scrollTo(0, savedScrollY);
+              isChangingPageSize = false;
+            }, 50);
+          });
           break;
         }
       }
